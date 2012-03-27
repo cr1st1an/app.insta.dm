@@ -1,0 +1,7 @@
+.ui-btn-up-d, .ui-btn-down-d, .ui-btn-hover-d {
+    background: -moz-linear-gradient(white, white) url('') repeat scroll 0 0 white;
+    border: 1px solid #CCCCCC;
+    color: #444444;
+    font-weight: bold;
+    text-shadow: 0 1px 1px white;
+}
