@@ -119,6 +119,7 @@ function REQ_auth(access_token){
     UTIL_cookie_create('access_token', access_token, 365);
     session_access_token = access_token;
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -134,6 +135,7 @@ function REQ_auth(access_token){
 function REQ_inbox(){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -148,6 +150,7 @@ function REQ_inbox(){
 function REQ_friends(){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -162,6 +165,7 @@ function REQ_friends(){
 function REQ_search(text){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -177,6 +181,7 @@ function REQ_search(text){
 function REQ_conversation(id_user_b, message_id){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -193,6 +198,7 @@ function REQ_conversation(id_user_b, message_id){
 function REQ_add_message(id_user_b, message){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -209,6 +215,7 @@ function REQ_add_message(id_user_b, message){
 function REQ_delete(id_user_b){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -224,6 +231,7 @@ function REQ_delete(id_user_b){
 function REQ_email(){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -238,6 +246,7 @@ function REQ_email(){
 function REQ_boxcar(email){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -253,6 +262,7 @@ function REQ_boxcar(email){
 function REQ_logout(){
     $.mobile.showPageLoadingMsg();
     $.ajax({
+        type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
@@ -326,11 +336,11 @@ function UI_index(){
     $('#indexContent').empty();
     $('#indexContent').scrollTop();
 
-    $('#indexContent').append('<img src="http://app.insta.dm/img/home.jpg" width="300" height="270" border="0" alt="instaDM" style="margin-left:-10px;margin-top:-10px;" />');
+    $('#indexContent').append('<img src="/img/home.jpg" width="300" height="270" border="0" alt="instaDM" style="margin-left:-10px;margin-top:-10px;" />');
     if(session_id == null)
-        $('#indexContent').append('<a href="https://api.instagram.com/oauth/authorize/?client_id='+instagram_client_id+'&redirect_uri='+instagram_callback_url+'&response_type=token&display=touch&scope=relationships"><img src="http://app.insta.dm/img/login.jpg" width="300" height="80" border="0" alt="inbox" style="margin-left:-10px;" /></a>');
+        $('#indexContent').append('<a href="https://api.instagram.com/oauth/authorize/?client_id='+instagram_client_id+'&redirect_uri='+instagram_callback_url+'&response_type=token&display=touch&scope=relationships"><img src="/img/login.jpg" width="300" height="80" border="0" alt="inbox" style="margin-left:-10px;" /></a>');
     else
-        $('#indexContent').append('<a href="javascript:L_inbox();"><img src="http://app.insta.dm/img/read.jpg" width="300" height="80" border="0" alt="inbox" style="margin-left:-10px;" /></a>');
+        $('#indexContent').append('<a href="javascript:L_inbox();"><img src="/img/read.jpg" width="300" height="80" border="0" alt="inbox" style="margin-left:-10px;" /></a>');
 
     $( "div[data-role=page]" ).page( "destroy" ).page();
 }
@@ -360,7 +370,7 @@ function UI_inbox(response){
                 $('#conversationsList').append('<li><a href="javascript:L_conversation('+conversation['id_user_b']+',0);" >' +
                     '<img src="' + conversation['profile_picture'] + '"/>' +
                     '<h4>' + conversation['username'] + '</h4>' +
-                    '<p><img style="margin-bottom:-4px;" src="http://app.insta.dm/img/status_' + conversation['status'] + '.png" alt="1" />' + (( conversation['status'] == 5)?  '<strong>' : '') + conversation['message'] + (( conversation['status'] == 5)?  '</strong>' : '') + '</p>' +
+                    '<p><img style="margin-bottom:-4px;" src="/img/status_' + conversation['status'] + '.png" alt="1" />' + (( conversation['status'] == 5)?  '<strong>' : '') + conversation['message'] + (( conversation['status'] == 5)?  '</strong>' : '') + '</p>' +
                     '</a></li>');
             });
             $('#conversationsList').listview();

@@ -16,12 +16,12 @@
 
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <title>instaDM</title>
-        <link href="http://app.insta.dm/css/_jqm.css?v=0005" media="screen" rel="stylesheet" type="text/css" />
-        <link href="http://app.insta.dm/css/app.css?v=0005" media="screen" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="http://app.insta.dm/js/_jquery.js?v=0005"></script>
-        <script type="text/javascript" src="http://app.insta.dm/js/config.js?v=0005"></script>
-        <script type="text/javascript" src="http://app.insta.dm/js/_jqm.js?v=0005"></script>
-        <script type="text/javascript" src="http://app.insta.dm/js/app.js?v=0005"></script>
+        <link href="/css/_jqm.css?v=0006" media="screen" rel="stylesheet" type="text/css" />
+        <link href="/css/app.css?v=0006" media="screen" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="/js/_jquery.js?v=0006"></script>
+        <script type="text/javascript" src="/js/config.js?v=0006"></script>
+        <script type="text/javascript" src="/js/_jqm.js?v=0006"></script>
+        <script type="text/javascript" src="/js/app.js?v=0006"></script>
     </head>
     <body>
         <div id="mainContainer" data-role="page" data-theme="c">
@@ -31,16 +31,10 @@
             <div  id="indexContent" data-role="content" data-theme="d" style="width:290px;background-color: #fff;padding-bottom:50px;">
             </div>
 
-            <div id="indexFooter" data-role="footer" data-theme="d" data-position="fixed" style="height:50px;">
-                <script type="text/javascript"><!--
-                    google_ad_client = "ca-pub-9668906758484557";
-                    /* [Content] - High contrast white */
-                    google_ad_slot = "8197305018";
-                    google_ad_width = 320;
-                    google_ad_height = 50;
-                    //-->
-                </script>
-                <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+            <div id="indexFooter" data-role="footer" data-theme="d" data-position="fixed" style="height:50px;border:0;">
+                <div>
+                    <a href="http://shuffle.insta.dm/" alt="The Shuffler" style="padding:0;margin:0;"><img src="/banners/shuffler.jpg" width="320" height="50" border="0"></a>
+                </div>
             </div>
 
             <script type="text/javascript">
@@ -50,6 +44,7 @@
 
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-28448221-1']);
+            _gaq.push(['_setDomainName', 'insta.dm']);
             _gaq.push(['_trackPageview']);
 
             (function() {
