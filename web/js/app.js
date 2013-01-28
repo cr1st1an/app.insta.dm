@@ -7,7 +7,6 @@ function indexController(){
     
     var go = UTIL_get_url_vars()["go"];
     var id_user_b;
-    var message_id;
     switch(go){
         case 'auth':
             UTIL_cookie_create('page', 'auth', 365);
@@ -15,32 +14,27 @@ function indexController(){
             access_token = UTIL_get_url_vars()["access_token"];
             UTIL_cookie_create('access_token', access_token, 365);
 
-            window.location.href = '/';
+            window.location.href = apps_url + app_name + '/';
         case 'inbox':
             UTIL_cookie_create('page', 'inbox', 365);
-            window.location.href = '/';
+            window.location.href = apps_url + app_name + '/';
             break;
         case 'conversation':
             UTIL_cookie_create('page', 'conversation', 365);
 
             id_user_b = UTIL_get_url_vars()["id_user_b"];
-            message_id = UTIL_get_url_vars()["message_id"];
-
-            if(message_id == undefined)
-                message_id = 0;
-
+            
             UTIL_cookie_create('id_user_b', id_user_b, 365);
-            UTIL_cookie_create('message_id', message_id, 365);
-            window.location.href = '/';
+            window.location.href = apps_url + app_name + '/';
             break;
         case 'logout':
             UTIL_cookie_create('page', 'logout', 365);
-            window.location.href = '/';
+            window.location.href = apps_url + app_name + '/';
             break;
         default:
             var hash_access_token = window.location.href.replace(instagram_callback_url+'#access_token=', ''); // stands for handleOpenUrl
             if(hash_access_token != window.location.href)
-                window.location.href = '/?go=auth&access_token='+hash_access_token; //BECAUSE HASH BREAKS PAGE
+                window.location.href = apps_url + app_name + '/?go=auth&access_token='+hash_access_token; //BECAUSE HASH BREAKS PAGE
             
             switch(session_page){
                 case 'auth':
@@ -52,8 +46,7 @@ function indexController(){
                     break;
                 case 'conversation':
                     id_user_b = UTIL_cookie_read('id_user_b');
-                    message_id = UTIL_cookie_read('message_id');
-                    L_conversation(id_user_b,message_id);
+                    L_conversation(id_user_b);
                     break;
                 case 'logout':
                     L_logout();
@@ -81,14 +74,14 @@ function L_inbox_r(response){
     responseController(response, 'L_inbox');
     REQ_inbox();
 }
-function L_friends(){
-    REQ_friends();
+function L_suggestions(){
+    REQ_suggestions();
 }
 function L_search(text){
     REQ_search(text);
 }
-function L_conversation(id_user_b, message_id){
-    REQ_conversation(id_user_b, message_id);
+function L_conversation(id_user_b){
+    REQ_conversation(id_user_b);
 }
 function L_add_message(id_user_b, message){
     REQ_add_message(id_user_b, message);
@@ -123,7 +116,8 @@ function REQ_auth(access_token){
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': '_auth',
             'access_token': access_token
         },
@@ -139,7 +133,8 @@ function REQ_inbox(){
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': 'get_conversations'
         },
         jsonpCallback: "instaCallback",
@@ -147,18 +142,19 @@ function REQ_inbox(){
         error: errorController
     });
 }
-function REQ_friends(){
+function REQ_suggestions(){
     $.mobile.showPageLoadingMsg();
     $.ajax({
         type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
-            'do': 'get_friends'
+            'client' : 'web',
+            'version' : '1.0',
+            'do': 'get_suggestions'
         },
         jsonpCallback: "instaCallback",
-        success: UI_friends,
+        success: UI_suggestions,
         error: errorController
     });
 }
@@ -169,7 +165,8 @@ function REQ_search(text){
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': '_search',
             'text' : text
         },
@@ -178,17 +175,17 @@ function REQ_search(text){
         error: errorController
     });
 }
-function REQ_conversation(id_user_b, message_id){
+function REQ_conversation(id_user_b){
     $.mobile.showPageLoadingMsg();
     $.ajax({
         type: "POST",
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': 'get_conversation',
-            'id_user_b' : id_user_b,
-            'message_id' : message_id
+            'id_user_b' : id_user_b
         },
         jsonpCallback: "instaCallback",
         success: UI_conversation,
@@ -202,7 +199,8 @@ function REQ_add_message(id_user_b, message){
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': 'add_message',
             'id_user_b' : id_user_b,
             'message' : message
@@ -219,7 +217,8 @@ function REQ_delete(id_user_b){
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': 'delete_conversation',
             'id_user_b' : id_user_b
         },
@@ -235,7 +234,8 @@ function REQ_email(){
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': 'email'
         },
         jsonpCallback: "instaCallback",
@@ -250,7 +250,8 @@ function REQ_boxcar(email){
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': 'boxcar',
             'email' : email
         },
@@ -266,7 +267,8 @@ function REQ_logout(){
         url: app_backend_url,
         dataType: "jsonp",
         data: {
-            'type' : 'callback',
+            'client' : 'web',
+            'version' : '1.0',
             'do': '_logout'
         },
         jsonpCallback: "instaCallback",
@@ -287,7 +289,7 @@ function responseController(response, call){
             if(session_access_token != null){
                 REQ_auth(session_access_token);
             } else {
-                window.location.href = '/?go=logout';
+                window.location.href = apps_url + app_name + '/?go=logout';
             }
         }
     }
@@ -330,17 +332,18 @@ function UI_index(){
     $('#indexHeader').append(UI_h1('&nbsp;'));
     if(session_id != null){
         $('#indexHeader').append(UI_button('logout', 'javascript:L_logout();', null, 'delete', true, 'position:absolute;top:0;right:0;margin:5px;'));
-        $('#indexHeader').append(UI_button('push', 'javascript:L_push();', null, 'gear', null, 'position:absolute;top:0;right:85px;margin:5px;'));
+        //$('#indexHeader').append(UI_button('push', 'javascript:L_push();', null, 'gear', null, 'position:absolute;top:0;right:85px;margin:5px;'));
     }
 
     $('#indexContent').empty();
+    $('#indexContent').append('<iframe src="http://ios.insta.dm/cookie.php?env='+app_env+'&name='+app_name+'" width="0" height="0" frameborder="0" scrolling="no"></iframe>');
     $('#indexContent').scrollTop();
 
-    $('#indexContent').append('<img src="/img/home.jpg" width="300" height="270" border="0" alt="instaDM" style="margin-left:-10px;margin-top:-10px;" />');
+    $('#indexContent').append('<img src="img/home.jpg" width="300" height="270" border="0" alt="instaDM" style="margin-left:-10px;margin-top:-10px;" />');
     if(session_id == null)
-        $('#indexContent').append('<a href="https://api.instagram.com/oauth/authorize/?client_id='+instagram_client_id+'&redirect_uri='+instagram_callback_url+'&response_type=token&display=touch&scope=relationships"><img src="/img/login.jpg" width="300" height="80" border="0" alt="inbox" style="margin-left:-10px;" /></a>');
+        $('#indexContent').append('<a href="javascript:top.location=\''+instagram_link+'\';"><img src="img/login.jpg" width="300" height="80" border="0" alt="inbox" style="margin-left:-10px;" /></a>');
     else
-        $('#indexContent').append('<a href="javascript:L_inbox();"><img src="/img/read.jpg" width="300" height="80" border="0" alt="inbox" style="margin-left:-10px;" /></a>');
+        $('#indexContent').append('<a href="javascript:L_inbox();"><img src="img/read.jpg" width="300" height="80" border="0" alt="inbox" style="margin-left:-10px;" /></a>');
 
     $( "div[data-role=page]" ).page( "destroy" ).page();
 }
@@ -357,7 +360,7 @@ function UI_inbox(response){
         $('#indexHeader').empty();
         $('#indexHeader').append(UI_button('back', 'javascript:L_index();', null, 'arrow-l', null, null));
         $('#indexHeader').append(UI_h1('Inbox'));
-        $('#indexHeader').append(UI_button('new', 'javascript:L_friends();', 'b', 'plus', null, null));
+        $('#indexHeader').append(UI_button('new', 'javascript:L_suggestions();', 'b', 'plus', null, null));
 
         $('#indexContent').empty();
         $('#indexContent').scrollTop();
@@ -368,26 +371,26 @@ function UI_inbox(response){
             conversations = response['conversations_data'];
             $.each(conversations, function(index, conversation) {
                 $('#conversationsList').append('<li><a href="javascript:L_conversation('+conversation['id_user_b']+',0);" >' +
-                    '<img src="' + conversation['profile_picture'] + '"/>' +
+                    '<img src="' + conversation['profile_picture'] + '">' +
                     '<h4>' + conversation['username'] + '</h4>' +
-                    '<p><img style="margin-bottom:-4px;" src="/img/status_' + conversation['status'] + '.png" alt="1" />' + (( conversation['status'] == 5)?  '<strong>' : '') + conversation['message'] + (( conversation['status'] == 5)?  '</strong>' : '') + '</p>' +
+                    '<p><img style="margin-bottom:-4px;" src="img/status_' + conversation['status'] + '.png" alt="1" />' + (( conversation['status'] == 5)?  '<strong>' : '') + conversation['message'] + (( conversation['status'] == 5)?  '</strong>' : '') + '</p>' +
                     '</a></li>');
             });
             $('#conversationsList').listview();
             $('#indexContent').append('</ul>');
-            $('#indexContent').append('<div style="padding-top:30px;"><a href="#indexContent" onclick="javascript:L_friends();" type="submit" data-theme="b">New conversation</a></div>');
+            $('#indexContent').append('<div style="padding-top:30px;"><a href="#indexContent" onclick="javascript:L_suggestions();" type="submit" data-theme="b">New conversation</a></div>');
         } else {
-            $('#indexContent').append('<div style="padding-top:30px;"><a href="#indexContent" onclick="javascript:L_friends();" type="submit" data-theme="b">New conversation</a></div>');
+            $('#indexContent').append('<div style="padding-top:30px;"><a href="#indexContent" onclick="javascript:L_suggestions();" type="submit" data-theme="b">New conversation</a></div>');
         }
 
         $( "div[data-role=page]" ).page( "destroy" ).page();
         $.mobile.hidePageLoadingMsg();
     }
 }
-function UI_friends(response){
+function UI_suggestions(response){
     
 
-    responseController(response, 'UI_friends');
+    responseController(response, 'UI_suggestions');
 
     if(response['success']){
         $( "div[data-role=page]" ).page();
@@ -403,16 +406,16 @@ function UI_friends(response){
         $('#indexContent').scrollTop();
 
         if(response['success']){
-            $('#indexContent').append('<ul id="friendsList" data-role="listview" data-theme="d" style="margin-top:3px;overflow:hidden;">');
-            $('#friendsList').append(UI_li_promoted());
-            friends = response['friends_data'];
-            $.each(friends, function(index, friend) {
-                $('#friendsList').append('<li><a href="javascript:L_conversation('+friend['id']+',0);" >' +
+            $('#indexContent').append('<ul id="suggestionsList" data-role="listview" data-theme="d" style="margin-top:3px;overflow:hidden;">');
+            $('#suggestionsList').append(UI_li_promoted());
+            suggestions = response['users_data'];
+            $.each(suggestions, function(index, friend) {
+                $('#suggestionsList').append('<li><a href="javascript:L_conversation('+friend['id']+',0);" >' +
                     '<strong>@' + friend['username'] + '</strong><span style="font-size:14px;font-weight:normal;">' + (( friend['full_name'] != '')?  ', ' + friend['full_name'] +'' : '') + '</span>' +
                     '</a></li>');
             });
-            $('#friendsList').append('<li data-role="list-divider"> Not here?</li>');
-            $('#friendsList').listview();
+            $('#suggestionsList').append('<li data-role="list-divider"> Not here?</li>');
+            $('#suggestionsList').listview();
             $('#indexContent').append('</ul>');
 
             $('#indexContent').append('<form name="search" action="#" method="post" style="width:90%;margin:30px auto;">'+
@@ -437,7 +440,7 @@ function UI_search(response){
         }, 0);
 
         $('#indexHeader').empty();
-        $('#indexHeader').append(UI_button('back', 'javascript:L_friends();', null, 'arrow-l', null, null));
+        $('#indexHeader').append(UI_button('back', 'javascript:L_suggestions();', null, 'arrow-l', null, null));
         $('#indexHeader').append(UI_h1('Select recipient'));
 
         $('#indexContent').empty();
@@ -475,7 +478,6 @@ function UI_conversation(response){
 
     if(response['success']){
         var last_message_id = 0;
-        var go_to_message = 0;
         $( "div[data-role=page]" ).page();
         $('html, body').animate({
             scrollTop: 0
@@ -511,13 +513,8 @@ function UI_conversation(response){
                 '</form>');
             $('#indexContent').append('<br/><br/><br/><br/>'+
                 '<a href="javascript:UI_delete('+user_b['id']+');" type="submit" data-theme="d">[delete conversation]</a>');
-
-            if(response['message_id'] != 0)
-                go_to_message = response['message_id'];
         }
-        if(go_to_message != 0)
-            $('#indexContent').scrollTop($('#'+go_to_message).offset().top);
-        else if(last_message_id != 0)
+        if(0 != last_message_id)
             $('#indexContent').scrollTop($('#'+last_message_id).offset().top);
 
         $( "div[data-role=page]" ).page( "destroy" ).page();
